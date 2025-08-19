@@ -1,0 +1,7 @@
+/* Profile.css */
+.profile { max-width: 720px; }
+.profile__header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+.avatar { width: 48px; height: 48px; border-radius: 9999px; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #374151; }
+.profile__name { font-weight: 700; }
+.profile__email { color: #6b7280; font-size: 0.9rem; }
+.profile__section { display: grid; grid-template-columns: 1fr; gap: 16px; }

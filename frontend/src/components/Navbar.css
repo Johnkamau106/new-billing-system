@@ -23,3 +23,6 @@
 .navbar__menu-btn:hover { background: #f3f4f6; }
 .navbar__title { font-size: 1.125rem; font-weight: 600; }
 .navbar__right { display: flex; align-items: center; gap: 16px; color: #4b5563; }
+.profile-link { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
+.profile-link:hover { opacity: .85; }
+.profile-avatar { width: 32px; height: 32px; border-radius: 9999px; background: #e5e7eb; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #374151; }

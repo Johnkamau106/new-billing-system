@@ -11,7 +11,10 @@ function Navbar({ onMenuClick }) {
 
       <h1 className="navbar__title">Money App</h1>
       <div className="navbar__right">
-        <span>Welcome, User</span>
+        <a className="profile-link" href="#/profile" onClick={(e) => { e.preventDefault(); window.location.href = "/profile"; }}>
+          <span className="profile-avatar">U</span>
+          <span>Profile</span>
+        </a>
       </div>
     </nav>
   );

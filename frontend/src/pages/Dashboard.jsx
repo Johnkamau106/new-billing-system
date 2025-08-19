@@ -32,11 +32,19 @@ export default function Dashboard() {
       {/* Cards */}
       <div className="grid-3">
         <div className="card">
-          <h2 className="section-title">Revenue</h2>
+          <h2 className="section-title">Income Today</h2>
+          <p className="section-subtitle">$420</p>
+        </div>
+        <div className="card">
+          <h2 className="section-title">Income This Month</h2>
           <p className="section-subtitle">$12,340</p>
         </div>
         <div className="card">
-          <h2 className="section-title">Users</h2>
+          <h2 className="section-title">Active Users</h2>
+          <p className="section-subtitle">1,000</p>
+        </div>
+        <div className="card">
+          <h2 className="section-title">Total Users</h2>
           <p className="section-subtitle">1,234</p>
         </div>
         <div className="card">
