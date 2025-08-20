@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 
 // Pages
@@ -25,6 +25,21 @@ import History from "./pages/client/History";
 import ClientProfile from "./pages/client/Profile";
 
 
+import { auth } from "./services/auth";
+
+const ProtectedRoute = ({ children, allowedRole }) => {
+  if (!auth.isAuthenticated()) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  const userRole = auth.getUserRole();
+  if (allowedRole && userRole !== allowedRole) {
+    return <Navigate to={userRole === 'admin' ? '/admin' : '/client'} replace />;
+  }
+
+  return children;
+};
+
 function App() {
   return (
     <Router>
@@ -32,11 +47,32 @@ function App() {
         <Route path="/" element={<Auth />} />
         <Route path="/auth" element={<Auth />} />
         {/* Admin Panel */}
-        <Route path="/admin/*" element={<Layout><AdminRoutes /></Layout>} />
+        <Route 
+          path="/admin/*" 
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <Layout><AdminRoutes /></Layout>
+            </ProtectedRoute>
+          } 
+        />
         {/* Client Panel */}
-        <Route path="/client/*" element={<Layout><ClientRoutes /></Layout>} />
-        {/* Default Dashboard for legacy route */}
-        <Route path="/dashboard/*" element={<Layout><MainRoutes /></Layout>} />
+        <Route 
+          path="/client/*" 
+          element={
+            <ProtectedRoute allowedRole="client">
+              <Layout><ClientRoutes /></Layout>
+            </ProtectedRoute>
+          } 
+        />
+        {/* Default Dashboard for legacy route - redirect to appropriate dashboard */}
+        <Route 
+          path="/dashboard/*" 
+          element={
+            <ProtectedRoute>
+              <Layout><MainRoutes /></Layout>
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </Router>
   );

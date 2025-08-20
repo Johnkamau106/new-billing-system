@@ -1,24 +1,108 @@
 /* Sidebar.css */
 .sidebar {
-  height: 100%;
+  height: 100vh;
+  width: 260px;
   background: #fff;
-  padding: 16px;
+  padding: 20px;
   border-right: 1px solid #e5e7eb;
+  overflow-y: auto;
 }
-.sidebar__title {
-  margin: 0 0 16px;
-  font-size: 1.125rem;
-  font-weight: 700;
+
+.sidebar__logo {
+  padding: 12px 0 24px;
 }
-.sidebar__menu { list-style: none; padding: 0; margin: 0; }
+
+.sidebar__logo img {
+  height: 32px;
+}
+
+.sidebar__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar__item {
+  display: flex;
+  flex-direction: column;
+}
+
 .sidebar__link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 10px;
-  color: inherit;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #64748b;
   text-decoration: none;
+  font-size: 14px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
 }
-.sidebar__link:hover { background: #f3f4f6; }
-.sidebar__link--active { background: #3b82f6; color: #fff; }
+
+.sidebar__link:hover {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.sidebar__link--active {
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 500;
+}
+
+.sidebar__badge {
+  position: absolute;
+  right: 12px;
+  background: #8b5cf6;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+.sidebar__chevron {
+  position: absolute;
+  right: 12px;
+  transition: transform 0.2s;
+}
+
+.sidebar__chevron--expanded {
+  transform: rotate(180deg);
+}
+
+.sidebar__submenu {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 4px 28px;
+}
+
+.sidebar__sublink {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: #64748b;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.sidebar__sublink:hover {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.sidebar__sublink--active {
+  color: #334155;
+  font-weight: 500;
+}
+
+.sidebar__link--expanded {
+  color: #334155;
+  font-weight: 500;
+}

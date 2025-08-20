@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import BandwidthGraph from "../components/BandwidthGraph";
-import axios from "axios";
+import { getDashboardData } from "../services/api";
 import "./Dashboard.css";
 
 const formatBytes = (bytes) => {
@@ -21,12 +21,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('/api/portal/dashboard');
-        setDashboardData(response.data);
+        const data = await getDashboardData();
+        setDashboardData(data);
         setLoading(false);
       } catch (err) {
         setError(err.message);
         setLoading(false);
+        console.error('Dashboard error:', err);
       }
     };
 
@@ -40,24 +41,31 @@ const Dashboard = () => {
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
   if (!dashboardData) return null;
 
+  // Safely access nested properties
+  const balance = dashboardData?.client?.balance ?? 0;
+  const downloadUsage = dashboardData?.usage_24h?.download ?? 0;
+  const uploadUsage = dashboardData?.usage_24h?.upload ?? 0;
+  const detailedUsage = dashboardData?.usage_24h?.detailed ?? [];
+  const unpaidBills = dashboardData?.unpaid_bills ?? [];
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Client Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card title="Current Balance" value={`$${dashboardData.client.balance}`} />
+        <Card title="Current Balance" value={`KES ${balance.toLocaleString()}`} />
         <Card 
           title="Download Usage (24h)" 
-          value={formatBytes(dashboardData.usage_24h.download)} 
+          value={formatBytes(downloadUsage)} 
         />
         <Card 
           title="Upload Usage (24h)" 
-          value={formatBytes(dashboardData.usage_24h.upload)} 
+          value={formatBytes(uploadUsage)} 
         />
       </div>
 
       <div className="mb-8">
-        <BandwidthGraph data={dashboardData.usage_24h.detailed} />
+        <BandwidthGraph data={detailedUsage} />
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
@@ -72,7 +80,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {dashboardData.unpaid_bills.map(bill => (
+              {unpaidBills.map(bill => (
                 <tr key={bill.id} className="border-b">
                   <td className="px-4 py-2">${bill.amount}</td>
                   <td className="px-4 py-2">{bill.description}</td>

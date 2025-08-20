@@ -1,0 +1,219 @@
+import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { BsGraphUp, BsWifi, BsPeople, BsTicket } from 'react-icons/bs';
+import { MiniBarChart, CircleChart, LoadingSpinner, ErrorDisplay } from '../components/Charts';
+
+const AdminDashboard = () => {
+  const [selectedRouter, setSelectedRouter] = useState('All routers');
+
+  const { data: dashboardData, isLoading, isError, error } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: async () => {
+      const response = await fetch('/api/dashboard');
+      if (!response.ok) {
+        throw new Error('Failed to fetch dashboard data');
+      }
+      return response.json();
+    },
+    refetchInterval: 30000 // Refresh every 30 seconds
+  });
+
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <ErrorDisplay message={error.message} />
+      </div>
+    );
+  }
+
+  const formatNumber = (num) => {
+    return num?.toLocaleString('en-KE') || '0';
+  };
+
+  const getIncomeChartData = () => {
+    return dashboardData?.income?.hourly?.slice(-6) || [];
+  };
+
+  const getUserTrendData = () => {
+    return dashboardData?.users?.trend || [];
+  };
+
+  const getUserActivityData = () => {
+    const active = dashboardData?.users?.active || 0;
+    const inactive = (dashboardData?.users?.total || 0) - active;
+    return [
+      { name: 'Active', value: active },
+      { name: 'Inactive', value: inactive }
+    ];
+  };
+
+  return (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-semibold">Welcome, Admin</h1>
+        <div className="flex items-center gap-4">
+          <select 
+            value={selectedRouter}
+            onChange={(e) => setSelectedRouter(e.target.value)}
+            className="p-2 border rounded-lg"
+          >
+            <option>All routers</option>
+            <option>Router 1</option>
+            <option>Router 2</option>
+          </select>
+          <button className="px-4 py-2 text-blue-600 bg-blue-50 rounded-lg">
+            Select router
+          </button>
+        </div>
+      </div>
+
+      {/* Income Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="flex justify-between items-start mb-2">
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">INCOME TODAY ON</h3>
+              <p className="text-2xl font-semibold">KSH.{formatNumber(dashboardData?.income?.today)}</p>
+            </div>
+            <span className="text-sm text-gray-500">{dashboardData?.income?.entries || 0} Entries</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <button className="text-blue-600 text-sm">View Reports</button>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="mb-2">
+            <h3 className="text-sm font-medium text-gray-500">INCOME THIS MONTH</h3>
+            <p className="text-2xl font-semibold">KSH.{formatNumber(dashboardData?.income?.thisMonth)}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <button className="text-blue-600 text-sm">View All</button>
+            <div className="h-10 w-20">
+              <MiniBarChart 
+                data={getIncomeChartData()} 
+                dataKey="revenue"
+                color="#3b82f6"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="mb-2">
+            <h3 className="text-sm font-medium text-gray-500">USERS ACTIVE</h3>
+            <p className="text-2xl font-semibold">{formatNumber(dashboardData?.users?.active)}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <button className="text-blue-600 text-sm">View All</button>
+            <div className="h-10 w-10">
+              <CircleChart 
+                data={getUserActivityData()}
+                colors={['#3b82f6', '#93c5fd']}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="mb-2">
+            <h3 className="text-sm font-medium text-gray-500">TOTAL USERS</h3>
+            <p className="text-2xl font-semibold">{formatNumber(dashboardData?.users?.total)}</p>
+          </div>
+          <div className="flex justify-between items-center">
+            <button className="text-blue-600 text-sm">View Reports</button>
+            <div className="h-10 w-20">
+              <MiniBarChart 
+                data={getUserTrendData()}
+                dataKey="users"
+                color="#22c55e"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tickets & Issues */}
+      <div className="bg-white p-4 rounded-lg shadow mb-8">
+        <h3 className="text-sm font-medium text-gray-500 mb-4">TICKETS & ESCALATED ISSUES</h3>
+        <div className="grid grid-cols-4 gap-4">
+          <div className="text-center">
+            <p className="text-xl font-semibold">{dashboardData?.tickets?.open || 0}</p>
+            <p className="text-sm text-gray-500">Open</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-semibold">{dashboardData?.tickets?.pending || 0}</p>
+            <p className="text-sm text-gray-500">Pending</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-semibold">{dashboardData?.tickets?.solved || 0}</p>
+            <p className="text-sm text-gray-500">Solved</p>
+          </div>
+          <div className="text-center">
+            <p className="text-xl font-semibold">{dashboardData?.tickets?.escalated || 0}</p>
+            <p className="text-sm text-gray-500">Escalated</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Clients Connection Overview */}
+      <div className="bg-white p-4 rounded-lg shadow">
+        <h3 className="text-sm font-medium text-gray-500 mb-4">CLIENTS CONNECTION OVERVIEW</h3>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm text-gray-500">Online Clients</p>
+              <p className="font-semibold">{dashboardData?.connections?.online?.clients || 0}</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm text-gray-500">Active Clients</p>
+              <p className="font-semibold">{dashboardData?.connections?.active?.clients || 0}</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="text-sm text-gray-500">Overdue clients</p>
+              <p className="font-semibold">{dashboardData?.connections?.overdue?.clients || 0}</p>
+            </div>
+          </div>
+          <div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm text-gray-500">Offline clients</p>
+              <p className="font-semibold">{dashboardData?.connections?.offline?.clients || 0}</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm text-gray-500">Inactive clients</p>
+              <p className="font-semibold">{dashboardData?.connections?.inactive?.clients || 0}</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="text-sm text-gray-500">Disabled</p>
+              <p className="font-semibold">{dashboardData?.connections?.inactive?.disabled || 0}</p>
+            </div>
+          </div>
+          <div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm text-gray-500">Online Hotspot</p>
+              <p className="font-semibold">{dashboardData?.connections?.online?.hotspot || 0}</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p className="text-sm text-gray-500">Offline Hotspot</p>
+              <p className="font-semibold">{dashboardData?.connections?.offline?.hotspot || 0}</p>
+            </div>
+            <div className="flex justify-between">
+              <p className="text-sm text-gray-500">Hotspot clients</p>
+              <p className="font-semibold">{dashboardData?.connections?.active?.hotspot || 0}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;

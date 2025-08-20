@@ -1,0 +1,40 @@
+/* Charts.css */
+.chart {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.chart__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.chart__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.chart__controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.chart__select {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #64748b;
+  outline: none;
+}
+
+.chart__container {
+  height: 300px;
+  width: 100%;
+}

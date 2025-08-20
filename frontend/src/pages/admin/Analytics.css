@@ -1,0 +1,46 @@
+/* Analytics.css */
+.analytics {
+  padding: 2rem;
+}
+
+.analytics__header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.analytics__title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.analytics__filters {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.analytics__filter {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #64748b;
+  outline: none;
+}
+
+.analytics__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.analytics__chart-container {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}

@@ -1,0 +1,68 @@
+/* Users.css */
+.users {
+  padding: 2rem;
+}
+
+.users__header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.users__title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.users__controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.users__search {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  min-width: 250px;
+}
+
+.users__add {
+  padding: 0.5rem 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.users__add:hover {
+  background: #2563eb;
+}
+
+.users__table {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.users__filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.users__filter {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #64748b;
+}

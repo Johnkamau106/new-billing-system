@@ -1,51 +1,131 @@
 // src/components/Sidebar.jsx
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, BarChart, Settings as SettingsIcon } from "lucide-react";
+import { useState } from "react";
+import { 
+  LayoutDashboard, 
+  MessageSquare, 
+  Mail, 
+  MessageCircle,
+  Users,
+  Wifi,
+  MonitorSmartphone,
+  UserPlus,
+  CreditCard,
+  TicketIcon,
+  ChevronDown
+} from "lucide-react";
 import "./Sidebar.css";
 
-
-const adminMenu = [
-  { name: "Dashboard", icon: <LayoutDashboard size={18} />, path: "/admin" },
-  { name: "Users", icon: <Users size={18} />, path: "/admin/users" },
-  { name: "Plans", icon: <BarChart size={18} />, path: "/admin/plans" },
-  { name: "Payments", icon: <BarChart size={18} />, path: "/admin/payments" },
-  { name: "Analytics", icon: <BarChart size={18} />, path: "/admin/analytics" },
-  { name: "Settings", icon: <SettingsIcon size={18} />, path: "/dashboard/settings" },
+const menuItems = [
+  { 
+    name: "Dashboard", 
+    icon: <LayoutDashboard size={18} />, 
+    path: "/admin" 
+  },
+  {
+    name: "Communication",
+    icon: <MessageSquare size={18} />,
+    submenu: [
+      { name: "Emails", path: "/admin/communication/emails" },
+      { name: "SMS", path: "/admin/communication/sms" },
+      { name: "Whatsapp", path: "/admin/communication/whatsapp", isNew: true },
+    ]
+  },
+  {
+    name: "Clients",
+    icon: <Users size={18} />,
+    submenu: [
+      { name: "Add new client", path: "/admin/clients/new" },
+      { name: "Clients List", path: "/admin/clients/list" },
+      { name: "PPPOE Clients", path: "/admin/clients/pppoe" },
+      { name: "STATIC Clients", path: "/admin/clients/static" },
+      { name: "Clients Lead", path: "/admin/clients/leads" },
+    ]
+  },
+  {
+    name: "Prepaid",
+    icon: <CreditCard size={18} />,
+    submenu: [
+      { name: "Prepaid Users", path: "/admin/prepaid/users" },
+      { name: "Prepaid Vouchers", path: "/admin/prepaid/vouchers" },
+      { name: "Recharge Account", path: "/admin/prepaid/recharge" },
+    ]
+  },
+  { 
+    name: "Tickets", 
+    icon: <TicketIcon size={18} />, 
+    path: "/admin/tickets",
+    isNew: true
+  },
 ];
 
-const clientMenu = [
-  { name: "Dashboard", icon: <LayoutDashboard size={18} />, path: "/client" },
-  { name: "Invoices", icon: <BarChart size={18} />, path: "/client/invoices" },
-  { name: "History", icon: <BarChart size={18} />, path: "/client/history" },
-  { name: "Profile", icon: <Users size={18} />, path: "/client/profile" },
-  { name: "Settings", icon: <SettingsIcon size={18} />, path: "/dashboard/settings" },
-];
 
-
-// Pass role as a prop: 'admin' or 'client'. Default to 'client'.
-export default function Sidebar({ onNavigate, role = 'client' }) {
+export default function Sidebar() {
   const location = useLocation();
-  const menuItems = role === 'admin' ? adminMenu : clientMenu;
+  const [expandedItems, setExpandedItems] = useState({});
+
+  const toggleSubmenu = (itemName) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [itemName]: !prev[itemName]
+    }));
+  };
+
+  const isLinkActive = (path) => {
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
 
   return (
     <div className="sidebar">
-      <h1 className="sidebar__title">💰 Money App</h1>
-      <ul className="sidebar__menu">
+      <div className="sidebar__logo">
+        <img src="/logo.svg" alt="Logo" />
+      </div>
+      <nav className="sidebar__menu">
         {menuItems.map((item) => (
-          <li key={item.name}>
-            <Link
-              to={item.path}
-              className={`sidebar__link ${
-                location.pathname === item.path ? "sidebar__link--active" : ""
-              }`}
-              onClick={onNavigate}
-            >
-              {item.icon}
-              {item.name}
-            </Link>
-          </li>
+          <div key={item.name} className="sidebar__item">
+            {item.submenu ? (
+              <>
+                <button
+                  className={`sidebar__link ${expandedItems[item.name] ? 'sidebar__link--expanded' : ''}`}
+                  onClick={() => toggleSubmenu(item.name)}
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
+                  {item.isNew && <span className="sidebar__badge">New</span>}
+                  <ChevronDown 
+                    size={16} 
+                    className={`sidebar__chevron ${expandedItems[item.name] ? 'sidebar__chevron--expanded' : ''}`} 
+                  />
+                </button>
+                {expandedItems[item.name] && (
+                  <ul className="sidebar__submenu">
+                    {item.submenu.map((subItem) => (
+                      <li key={subItem.name}>
+                        <Link
+                          to={subItem.path}
+                          className={`sidebar__sublink ${isLinkActive(subItem.path) ? 'sidebar__sublink--active' : ''}`}
+                        >
+                          {subItem.name}
+                          {subItem.isNew && <span className="sidebar__badge">New</span>}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            ) : (
+              <Link
+                to={item.path}
+                className={`sidebar__link ${isLinkActive(item.path) ? 'sidebar__link--active' : ''}`}
+              >
+                {item.icon}
+                <span>{item.name}</span>
+                {item.isNew && <span className="sidebar__badge">New</span>}
+              </Link>
+            )}
+          </div>
         ))}
-      </ul>
+      </nav>
     </div>
   );
 }

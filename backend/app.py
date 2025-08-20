@@ -17,10 +17,12 @@ def create_app():
     from routes.clients import clients_bp
     from routes.reports import reports_bp
     from routes.settings import settings_bp
+    from routes.dashboard import dashboard_bp
 
     app.register_blueprint(clients_bp, url_prefix="/api/clients")
     app.register_blueprint(reports_bp, url_prefix="/api/reports")
     app.register_blueprint(settings_bp, url_prefix="/api/settings")
+    app.register_blueprint(dashboard_bp)
 
     @app.route("/")
     def index():

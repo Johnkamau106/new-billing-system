@@ -1,5 +1,5 @@
 from app import db
-from backend.models.client import Client
+from models.clients import Client
 
 
 def get_all_clients():
