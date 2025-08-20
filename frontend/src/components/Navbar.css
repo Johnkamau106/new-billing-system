@@ -26,3 +26,26 @@
 .profile-link { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
 .profile-link:hover { opacity: .85; }
 .profile-avatar { width: 32px; height: 32px; border-radius: 9999px; background: #e5e7eb; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #374151; }
+
+.notification-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+.notification-btn:hover { background: #f3f4f6; }
+.notification-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #ef4444;
+  border: 2px solid #fff;
+}
