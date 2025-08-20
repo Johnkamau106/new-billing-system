@@ -1,4 +1,5 @@
 // src/App.jsx
+// src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 
@@ -18,6 +19,8 @@ import Plans from "./pages/admin/Plans";
 import Payments from "./pages/admin/Payments";
 import Analytics from "./pages/admin/Analytics";
 import AddClientPage from "./pages/admin/AddClientPage";
+import ClientsListPage from "./pages/admin/ClientsListPage";
+import CAPsMANPage from "./pages/admin/CAPsMANPage";
 
 // Client panel pages
 import ClientDashboard from "./pages/client/ClientDashboard";
@@ -98,6 +101,8 @@ const AdminRoutes = () => (
     <Route path="/payments" element={<Payments />} />
     <Route path="/analytics" element={<Analytics />} />
     <Route path="/clients/new" element={<AddClientPage />} />
+    <Route path="/clients/list" element={<ClientsListPage />} />
+    <Route path="/network/capsman" element={<CAPsMANPage />} />
   </Routes>
 );
 

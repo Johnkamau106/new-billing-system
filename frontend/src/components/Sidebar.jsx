@@ -43,6 +43,14 @@ const menuItems = [
     ]
   },
   {
+    name: "Network",
+    icon: <Wifi size={18} />, // Using Wifi icon for network
+    submenu: [
+      { name: "CAPsMAN", path: "/admin/network/capsman", isNew: true },
+      // Potentially other network related items like "Routers", "Switches", etc.
+    ]
+  },
+  {
     name: "Prepaid",
     icon: <CreditCard size={18} />,
     submenu: [

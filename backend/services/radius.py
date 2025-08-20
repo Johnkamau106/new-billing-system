@@ -9,12 +9,25 @@ import os
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def _get_mikrotik_rate_limit(bandwidth_mbps):
+    """Converts bandwidth in Mbps to Mikrotik-Rate-Limit string (e.g., "1M/1M")."""
+    if bandwidth_mbps:
+        return f"{bandwidth_mbps}M/{bandwidth_mbps}M"
+    return None
+
 class RadiusServer(server.Server):
     def __init__(self, dictionary_file=None):
         if dictionary_file is None:
             dictionary_file = "/etc/freeradius/3.0/dictionary"
         
         self.dictionary = dictionary.Dictionary(dictionary_file)
+        # Attempt to load Mikrotik dictionary
+        try:
+            self.dictionary.read_dictionary("/etc/freeradius/3.0/dictionary.mikrotik")
+            logger.info("Loaded Mikrotik RADIUS dictionary.")
+        except IOError:
+            logger.warning("Mikrotik RADIUS dictionary not found at /etc/freeradius/3.0/dictionary.mikrotik. Mikrotik-specific attributes may not work.")
+
         server.Server.__init__(self, dict=self.dictionary)
         
         # RADIUS secret key - should be configured securely in production
@@ -51,9 +64,10 @@ class RadiusServer(server.Server):
         
         # Add RADIUS attributes for connection parameters
         if client.bandwidth_limit:
+            mikrotik_rate_limit = _get_mikrotik_rate_limit(client.bandwidth_limit)
+            if mikrotik_rate_limit:
+                reply.AddAttribute("Mikrotik-Rate-Limit", mikrotik_rate_limit)
             reply.AddAttribute("Acct-Interim-Interval", 300)  # Update every 5 minutes
-            reply.AddAttribute("WISPr-Bandwidth-Max-Up", client.bandwidth_limit)
-            reply.AddAttribute("WISPr-Bandwidth-Max-Down", client.bandwidth_limit)
             
         if client.session_timeout:
             reply.AddAttribute("Session-Timeout", client.session_timeout)
@@ -64,13 +78,38 @@ class RadiusServer(server.Server):
         logger.info(f"Auth successful for user: {username}")
         return reply
 
+    def HandleAcctPacket(self, pkt):
+        """Handle incoming accounting requests"""
+        username = pkt.get(1)[0]  # User-Name
+        acct_status_type = pkt.get(40)[0]  # Acct-Status-Type
+
+        logger.info(f"Accounting request for user: {username}, Type: {acct_status_type}")
+
+        # Extract relevant accounting attributes
+        acct_session_id = pkt.get(44, [None])[0]  # Acct-Session-Id
+        acct_input_octets = pkt.get(42, [0])[0]  # Acct-Input-Octets
+        acct_output_octets = pkt.get(43, [0])[0]  # Acct-Output-Octets
+        acct_session_time = pkt.get(46, [0])[0]  # Acct-Session-Time
+        
+        # In a real application, you would store this data in a database
+        # For now, we'll just log it.
+        logger.info(f"  Session ID: {acct_session_id}")
+        logger.info(f"  Input Octets: {acct_input_octets}")
+        logger.info(f"  Output Octets: {acct_output_octets}")
+        logger.info(f"  Session Time: {acct_session_time} seconds")
+
+        reply = self.CreateReplyPacket(pkt)
+        reply.code = packet.AccountingResponse
+        return reply
+
 def start_radius_server(host="0.0.0.0", auth_port=1812, acct_port=1813):
     """Start the RADIUS server"""
     logger.info("Starting RADIUS server...")
     
     # Create and start server
     srv = RadiusServer()
-    srv.BindToAddress(host)
+    srv.BindToAddress(host, auth_port) # Bind to authentication port
+    srv.BindToAddress(host, acct_port) # Bind to accounting port
     srv.Run()
 
 # Usage example:

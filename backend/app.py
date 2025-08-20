@@ -18,11 +18,24 @@ def create_app():
     from routes.reports import reports_bp
     from routes.settings import settings_bp
     from routes.dashboard import dashboard_bp
+    from routes.plans import plans_bp
 
     app.register_blueprint(clients_bp, url_prefix="/api/clients")
     app.register_blueprint(reports_bp, url_prefix="/api/reports")
     app.register_blueprint(settings_bp, url_prefix="/api/settings")
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(plans_bp, url_prefix="/api/plans")
+
+    @app.route("/")
+    def index():
+        return {"message": "✅ Flask + PostgreSQL backend is running"}
+
+    return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True)
 
     @app.route("/")
     def index():
