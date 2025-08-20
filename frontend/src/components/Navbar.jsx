@@ -1,5 +1,6 @@
 // src/components/Navbar.jsx
 import { Menu, Bell } from "lucide-react";
+import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar({ onMenuClick }) {
@@ -15,10 +16,10 @@ function Navbar({ onMenuClick }) {
           <Bell size={20} color="#374151" />
           <span className="notification-dot"></span>
         </button>
-        <a className="profile-link" href="#/profile" onClick={(e) => { e.preventDefault(); window.location.href = "/profile"; }}>
+        <Link to="/dashboard/profile" className="profile-link">
           <span className="profile-avatar">U</span>
           <span>Profile</span>
-        </a>
+        </Link>
       </div>
     </nav>
   );

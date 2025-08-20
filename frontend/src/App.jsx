@@ -17,6 +17,7 @@ import Users from "./pages/admin/Users";
 import Plans from "./pages/admin/Plans";
 import Payments from "./pages/admin/Payments";
 import Analytics from "./pages/admin/Analytics";
+import AddClientPage from "./pages/admin/AddClientPage";
 
 // Client panel pages
 import ClientDashboard from "./pages/client/ClientDashboard";
@@ -96,6 +97,7 @@ const AdminRoutes = () => (
     <Route path="/plans" element={<Plans />} />
     <Route path="/payments" element={<Payments />} />
     <Route path="/analytics" element={<Analytics />} />
+    <Route path="/clients/new" element={<AddClientPage />} />
   </Routes>
 );
 

@@ -2,10 +2,19 @@ import React from 'react';
 import './CustomerModal.css';
 
 export const AddCustomerModal = ({ onClose, onSubmit }) => {
+  const [plans, setPlans] = React.useState([]);
+
+  React.useEffect(() => {
+    fetch('/api/plans')
+      .then(res => res.json())
+      .then(data => setPlans(data));
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Get form data and submit
-    onSubmit(formData);
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    onSubmit(data);
   };
 
   return (
@@ -36,6 +45,29 @@ export const AddCustomerModal = ({ onClose, onSubmit }) => {
           <div className="form-group">
             <label>Installation Notes</label>
             <textarea name="installationNotes" rows="3"></textarea>
+          </div>
+          <hr />
+          <h3 className="modal__subtitle">Network Authentication</h3>
+          <div className="form-group">
+            <label>PPPoE/Hotspot Username</label>
+            <input type="text" name="radius_username" />
+          </div>
+          <div className="form-group">
+            <label>PPPoE/Hotspot Password</label>
+            <input type="password" name="radius_password" />
+          </div>
+          <div className="form-group">
+            <label>Data Plan</label>
+            <select name="plan_id">
+              <option value="">Select a plan</option>
+              {plans.map(plan => (
+                <option key={plan.id} value={plan.id}>{plan.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Static IP Address</label>
+            <input type="text" name="ip_address" />
           </div>
           <div className="modal__actions">
             <button type="button" onClick={onClose}>Cancel</button>
@@ -82,6 +114,18 @@ export const CustomerDetailsModal = ({ customer, onClose, onEdit }) => {
             <p className={`status-badge status-badge--${customer.status.toLowerCase()}`}>
               {customer.status}
             </p>
+          </div>
+        </div>
+        <hr />
+        <h3 className="modal__subtitle">Network Authentication</h3>
+        <div className="customer-details">
+          <div className="detail-group">
+            <label>PPPoE/Hotspot Username</label>
+            <p>{customer.radius_username || 'Not set'}</p>
+          </div>
+          <div className="detail-group">
+            <label>Static IP Address</label>
+            <p>{customer.ip_address || 'Not set'}</p>
           </div>
         </div>
         <div className="modal__actions">
