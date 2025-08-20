@@ -1,6 +1,4 @@
 /* Dashboard.css */
-.section-title { margin: 0 0 4px; font-size: 1.25rem; font-weight: 600; }
-.section-subtitle { margin: 0; color: #6b7280; }
 .charts { display: grid; grid-template-columns: 1fr; gap: 24px; }
 @media (min-width: 768px) {
   .charts { grid-template-columns: repeat(2, 1fr); }
