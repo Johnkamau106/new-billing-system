@@ -22,6 +22,8 @@ import AddClientPage from "./pages/admin/AddClientPage";
 import ClientsListPage from "./pages/admin/ClientsListPage";
 import CAPsMANPage from "./pages/admin/CAPsMANPage";
 
+import Hotspots from "./pages/admin/Hotspots";
+
 // Client panel pages
 import ClientDashboard from "./pages/client/ClientDashboard";
 import Invoices from "./pages/client/Invoices";
@@ -85,33 +87,34 @@ function App() {
 
 const MainRoutes = () => (
   <Routes>
-    <Route path="/" element={<Dashboard />} />
-    <Route path="/clients" element={<Clients />} />
-    <Route path="/reports" element={<Reports />} />
-    <Route path="/settings" element={<Settings />} />
-    <Route path="/profile" element={<Profile />} />
+    <Route path="" element={<Dashboard />} />
+    <Route path="clients" element={<Clients />} />
+    <Route path="reports" element={<Reports />} />
+    <Route path="settings" element={<Settings />} />
+    <Route path="profile" element={<Profile />} />
   </Routes>
 );
 
 const AdminRoutes = () => (
   <Routes>
-    <Route path="/" element={<AdminDashboard />} />
-    <Route path="/users" element={<Users />} />
-    <Route path="/plans" element={<Plans />} />
-    <Route path="/payments" element={<Payments />} />
-    <Route path="/analytics" element={<Analytics />} />
-    <Route path="/clients/new" element={<AddClientPage />} />
-    <Route path="/clients/list" element={<ClientsListPage />} />
-    <Route path="/network/capsman" element={<CAPsMANPage />} />
+    <Route path="" element={<AdminDashboard />} />
+    <Route path="users" element={<Users />} />
+    <Route path="plans" element={<Plans />} />
+    <Route path="payments" element={<Payments />} />
+    <Route path="analytics" element={<Analytics />} />
+    <Route path="clients/new" element={<AddClientPage />} />
+    <Route path="clients/list" element={<ClientsListPage />} />
+    <Route path="network/capsman" element={<CAPsMANPage />} />
+    <Route path="network/hotspots" element={<Hotspots />} />
   </Routes>
 );
 
 const ClientRoutes = () => (
   <Routes>
-    <Route path="/" element={<ClientDashboard />} />
-    <Route path="/invoices" element={<Invoices />} />
-    <Route path="/history" element={<History />} />
-    <Route path="/profile" element={<ClientProfile />} />
+    <Route path="" element={<ClientDashboard />} />
+    <Route path="invoices" element={<Invoices />} />
+    <Route path="history" element={<History />} />
+    <Route path="profile" element={<ClientProfile />} />
   </Routes>
 );
 

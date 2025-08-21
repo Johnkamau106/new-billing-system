@@ -59,9 +59,9 @@ const AdminDashboard = () => {
       <div className="dashboard__grid">
         <div className="stat-card stat-card--income">
           <div className="stat-card__title">INCOME TODAY ON</div>
-          <div className="stat-card__value">{formatCurrency(1190)}</div>
+          <div className="stat-card__value">{formatCurrency(dashboardData?.dailyIncome || 0)}</div>
           <div className="stat-card__footer">
-            <div>72 Entries</div>
+            <div>{formatNumber(dashboardData?.dailyEntries)} Entries</div>
             <a href="#" className="stat-card__link">View Reports</a>
           </div>
         </div>
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
 
         <div className="stat-card stat-card--users">
           <div className="stat-card__title">USERS ACTIVE</div>
-          <div className="stat-card__value">41</div>
+          <div className="stat-card__value">{formatNumber(dashboardData?.activeUsers)}</div>
           <div className="stat-card__footer">
             <div>&nbsp;</div>
             <a href="#" className="stat-card__link">View All</a>
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
 
         <div className="stat-card stat-card--total">
           <div className="stat-card__title">TOTAL USERS</div>
-          <div className="stat-card__value">2641</div>
+          <div className="stat-card__value">{formatNumber(dashboardData?.totalUsers)}</div>
           <div className="stat-card__footer">
             <div>&nbsp;</div>
             <a href="#" className="stat-card__link">View Reports</a>
@@ -98,19 +98,19 @@ const AdminDashboard = () => {
         <h2 className="tickets-card__title">TICKETS & ESCALATED ISSUES</h2>
         <div className="tickets-grid">
           <div className="ticket-stat">
-            <div className="ticket-stat__value">0</div>
+            <div className="ticket-stat__value">{formatNumber(dashboardData?.tickets?.open)}</div>
             <div className="ticket-stat__label">Open</div>
           </div>
           <div className="ticket-stat">
-            <div className="ticket-stat__value">0</div>
+            <div className="ticket-stat__value">{formatNumber(dashboardData?.tickets?.pending)}</div>
             <div className="ticket-stat__label">Pending</div>
           </div>
           <div className="ticket-stat">
-            <div className="ticket-stat__value">0</div>
+            <div className="ticket-stat__value">{formatNumber(dashboardData?.tickets?.solved)}</div>
             <div className="ticket-stat__label">Solved</div>
           </div>
           <div className="ticket-stat">
-            <div className="ticket-stat__value">0</div>
+            <div className="ticket-stat__value">{formatNumber(dashboardData?.tickets?.escalated)}</div>
             <div className="ticket-stat__label">Escalated</div>
           </div>
         </div>
@@ -121,31 +121,31 @@ const AdminDashboard = () => {
         <div className="clients-grid">
           <div>
             <div className="client-stat">
-              <div className="client-stat__value">0</div>
+              <div className="client-stat__value">{formatNumber(dashboardData?.clients?.online)}</div>
               <div className="client-stat__label">Online Clients</div>
             </div>
             <div className="client-stat">
-              <div className="client-stat__value">21</div>
+              <div className="client-stat__value">{formatNumber(dashboardData?.hotspots?.online)}</div>
               <div className="client-stat__label">Online Hotspot</div>
             </div>
           </div>
           <div>
             <div className="client-stat">
-              <div className="client-stat__value">41</div>
+              <div className="client-stat__value">{formatNumber(dashboardData?.clients?.active)}</div>
               <div className="client-stat__label">Active Clients</div>
             </div>
             <div className="client-stat">
-              <div className="client-stat__value">2626</div>
+              <div className="client-stat__value">{formatNumber(dashboardData?.hotspots?.offline)}</div>
               <div className="client-stat__label">Offline Hotspot</div>
             </div>
           </div>
           <div>
             <div className="client-stat">
-              <div className="client-stat__value">0</div>
+              <div className="client-stat__value">{formatNumber(dashboardData?.clients?.disabled)}</div>
               <div className="client-stat__label">Disabled Clients</div>
             </div>
             <div className="client-stat">
-              <div className="client-stat__value">3091</div>
+              <div className="client-stat__value">{formatNumber(dashboardData?.hotspots?.total)}</div>
               <div className="client-stat__label">Hotspot clients</div>
             </div>
           </div>
