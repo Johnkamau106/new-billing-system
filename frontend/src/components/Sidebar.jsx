@@ -39,6 +39,7 @@ const menuItems = [
       { name: "Clients List", path: "/admin/clients/list" },
       { name: "PPPOE Clients", path: "/admin/clients/pppoe" },
       { name: "STATIC Clients", path: "/admin/clients/static" },
+      { name: "Hotspot Clients", path: "/admin/clients/hotspot" },
       { name: "Clients Lead", path: "/admin/clients/leads" },
     ]
   },
@@ -47,6 +48,7 @@ const menuItems = [
     icon: <Wifi size={18} />, // Using Wifi icon for network
     submenu: [
       { name: "CAPsMAN", path: "/admin/network/capsman", isNew: true },
+      { name: "Hotspots", path: "/admin/network/hotspots" },
       // Potentially other network related items like "Routers", "Switches", etc.
     ]
   },

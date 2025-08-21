@@ -21,6 +21,9 @@ import Analytics from "./pages/admin/Analytics";
 import AddClientPage from "./pages/admin/AddClientPage";
 import ClientsListPage from "./pages/admin/ClientsListPage";
 import CAPsMANPage from "./pages/admin/CAPsMANPage";
+import HotspotClients from "./pages/admin/HotspotClients";
+import PppoeClients from "./pages/admin/PppoeClients";
+import StaticClients from "./pages/admin/StaticClients";
 
 import Hotspots from "./pages/admin/Hotspots";
 
@@ -104,6 +107,9 @@ const AdminRoutes = () => (
     <Route path="analytics" element={<Analytics />} />
     <Route path="clients/new" element={<AddClientPage />} />
     <Route path="clients/list" element={<ClientsListPage />} />
+    <Route path="clients/hotspot" element={<HotspotClients />} />
+    <Route path="clients/pppoe" element={<PppoeClients />} />
+    <Route path="clients/static" element={<StaticClients />} />
     <Route path="network/capsman" element={<CAPsMANPage />} />
     <Route path="network/hotspots" element={<Hotspots />} />
   </Routes>
