@@ -1,49 +1,51 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import Config
 
+# Initialize extensions without an app
 db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
+    app = Flask(__name__, static_folder='../frontend/dist', static_url_path='/')
+    
+    # Configuration
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'app.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # RADIUS Server Configuration
+    app.config['RADIUS_HOST'] = os.environ.get('RADIUS_HOST', '0.0.0.0')
+    app.config['RADIUS_AUTH_PORT'] = int(os.environ.get('RADIUS_AUTH_PORT', 1812))
+    app.config['RADIUS_ACCT_PORT'] = int(os.environ.get('RADIUS_ACCT_PORT', 1813))
+    app.config['RADIUS_SECRET'] = os.environ.get('RADIUS_SECRET', 'testing123')
+    app.config['RADIUS_DICTIONARY_PATH'] = os.environ.get('RADIUS_DICTIONARY_PATH', os.path.join(basedir, 'radius_dictionaries/dictionary'))
+    app.config['RADIUS_MIKROTIK_DICTIONARY_PATH'] = os.environ.get('RADIUS_MIKROTIK_DICTIONARY_PATH', os.path.join(basedir, 'radius_dictionaries/dictionary.mikrotik'))
+
+    # Initialize extensions with app
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Register blueprints
-    from routes.clients import clients_bp
-    from routes.reports import reports_bp
-    from routes.settings import settings_bp
-    from routes.dashboard import dashboard_bp
-    from routes.plans import plans_bp
+    with app.app_context():
+        from models import plans, customer # noqa: F401
+        from commands import run_radius_command
+        # Import and register blueprints
+        from routes.customer_routes import customer_bp
+        from routes.plan_routes import plan_bp
+        app.register_blueprint(plan_bp)
+        app.register_blueprint(customer_bp)
+        
+        # A simple catch-all route to serve the frontend
+        @app.route('/', defaults={'path': ''})
+        @app.route('/<path:path>')
+        def catch_all(path):
+            if os.path.exists(os.path.join(app.static_folder, path)):
+                return app.send_static_file(path)
+            return app.send_static_file('index.html')
 
-    app.register_blueprint(clients_bp, url_prefix="/api/clients")
-    app.register_blueprint(reports_bp, url_prefix="/api/reports")
-    app.register_blueprint(settings_bp, url_prefix="/api/settings")
-    app.register_blueprint(dashboard_bp)
-    app.register_blueprint(plans_bp, url_prefix="/api/plans")
-
-    @app.route("/")
-    def index():
-        return {"message": "✅ Flask + PostgreSQL backend is running"}
-
-    return app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
-
-    @app.route("/")
-    def index():
-        return {"message": "✅ Flask + PostgreSQL backend is running"}
+        # Register CLI commands
+        app.cli.add_command(run_radius_command)
 
     return app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
