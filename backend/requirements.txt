@@ -14,3 +14,5 @@ typing_extensions==4.7.1
 Werkzeug==2.3.7
 pyrad==2.4
 netaddr==0.8.0
+Flask-Migrate==4.1.0
+alembic==1.16.4

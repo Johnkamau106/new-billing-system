@@ -1,5 +1,6 @@
 from pyrad import dictionary, packet, server
 from models.clients import Client
+from models.radius_session import RadiusSession
 from app import db
 from datetime import datetime
 import logging
@@ -91,12 +92,27 @@ class RadiusServer(server.Server):
         acct_output_octets = pkt.get(43, [0])[0]  # Acct-Output-Octets
         acct_session_time = pkt.get(46, [0])[0]  # Acct-Session-Time
         
-        # In a real application, you would store this data in a database
-        # For now, we'll just log it.
-        logger.info(f"  Session ID: {acct_session_id}")
-        logger.info(f"  Input Octets: {acct_input_octets}")
-        logger.info(f"  Output Octets: {acct_output_octets}")
-        logger.info(f"  Session Time: {acct_session_time} seconds")
+        if acct_status_type == b"Start":
+            session = RadiusSession(
+                session_id=acct_session_id.decode('utf-8'),
+                username=username.decode('utf-8'),
+                start_time=datetime.utcnow()
+            )
+            db.session.add(session)
+            db.session.commit()
+            logger.info(f"  New session started: {acct_session_id}")
+        elif acct_status_type == b"Stop" or acct_status_type == b"Interim-Update":
+            session = RadiusSession.query.filter_by(session_id=acct_session_id.decode('utf-8')).first()
+            if session:
+                session.input_octets = acct_input_octets
+                session.output_octets = acct_output_octets
+                session.session_time = acct_session_time
+                if acct_status_type == b"Stop":
+                    session.stop_time = datetime.utcnow()
+                db.session.commit()
+                logger.info(f"  Session {acct_status_type.decode('utf-8')} for {acct_session_id}")
+            else:
+                logger.warning(f"  Session not found for {acct_status_type.decode('utf-8')}: {acct_session_id}")
 
         reply = self.CreateReplyPacket(pkt)
         reply.code = packet.AccountingResponse

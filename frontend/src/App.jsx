@@ -24,6 +24,7 @@ import CAPsMANPage from "./pages/admin/CAPsMANPage";
 import HotspotClients from "./pages/admin/HotspotClients";
 import PppoeClients from "./pages/admin/PppoeClients";
 import StaticClients from "./pages/admin/StaticClients";
+import SessionHistory from "./pages/admin/SessionHistory";
 
 import Hotspots from "./pages/admin/Hotspots";
 
@@ -110,6 +111,7 @@ const AdminRoutes = () => (
     <Route path="clients/hotspot" element={<HotspotClients />} />
     <Route path="clients/pppoe" element={<PppoeClients />} />
     <Route path="clients/static" element={<StaticClients />} />
+    <Route path="clients/sessions" element={<SessionHistory />} />
     <Route path="network/capsman" element={<CAPsMANPage />} />
     <Route path="network/hotspots" element={<Hotspots />} />
   </Routes>

@@ -40,6 +40,7 @@ const menuItems = [
       { name: "PPPOE Clients", path: "/admin/clients/pppoe" },
       { name: "STATIC Clients", path: "/admin/clients/static" },
       { name: "Hotspot Clients", path: "/admin/clients/hotspot" },
+      { name: "Session History", path: "/admin/clients/sessions" },
       { name: "Clients Lead", path: "/admin/clients/leads" },
     ]
   },
