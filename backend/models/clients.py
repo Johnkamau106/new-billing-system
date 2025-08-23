@@ -16,6 +16,10 @@ class Client(db.Model):
     session_timeout = db.Column(db.Integer, default=3600)  # in seconds
     last_login = db.Column(db.DateTime, nullable=True)
 
+    # Billing specific fields
+    plan_id = db.Column(db.Integer, db.ForeignKey('plan.id'), nullable=True) # Allow null for existing clients without a plan
+    plan = db.relationship('Plan', backref='clients')
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -26,5 +30,6 @@ class Client(db.Model):
             "active": self.active,
             "bandwidth_limit": self.bandwidth_limit,
             "session_timeout": self.session_timeout,
-            "last_login": self.last_login.isoformat() if self.last_login else None
+            "last_login": self.last_login.isoformat() if self.last_login else None,
+            "plan_id": self.plan_id
         }

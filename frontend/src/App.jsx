@@ -20,17 +20,24 @@ import Payments from "./pages/admin/Payments";
 import Analytics from "./pages/admin/Analytics";
 import AddClientPage from "./pages/admin/AddClientPage";
 import ClientsListPage from "./pages/admin/ClientsListPage";
+import Invoices from "./pages/admin/Invoices";
+import Invoice from "./pages/admin/Invoice";
+import CreateInvoice from "./pages/admin/CreateInvoice";
 import CAPsMANPage from "./pages/admin/CAPsMANPage";
 import HotspotClients from "./pages/admin/HotspotClients";
 import PppoeClients from "./pages/admin/PppoeClients";
 import StaticClients from "./pages/admin/StaticClients";
 import SessionHistory from "./pages/admin/SessionHistory";
+import PrepaidUsers from "./pages/admin/PrepaidUsers";
+import PrepaidVouchers from "./pages/admin/PrepaidVouchers";
+import RechargeAccount from "./pages/admin/RechargeAccount";
 
 import Hotspots from "./pages/admin/Hotspots";
 
 // Client panel pages
 import ClientDashboard from "./pages/client/ClientDashboard";
-import Invoices from "./pages/client/Invoices";
+import ClientInvoices from "./pages/client/Invoices";
+import ClientInvoice from "./pages/client/Invoice";
 import History from "./pages/client/History";
 import ClientProfile from "./pages/client/Profile";
 
@@ -112,15 +119,22 @@ const AdminRoutes = () => (
     <Route path="clients/pppoe" element={<PppoeClients />} />
     <Route path="clients/static" element={<StaticClients />} />
     <Route path="clients/sessions" element={<SessionHistory />} />
+    <Route path="invoices" element={<Invoices />} />
+    <Route path="invoices/create" element={<CreateInvoice />} />
+    <Route path="invoices/:id" element={<Invoice />} />
     <Route path="network/capsman" element={<CAPsMANPage />} />
     <Route path="network/hotspots" element={<Hotspots />} />
+    <Route path="prepaid/users" element={<PrepaidUsers />} />
+    <Route path="prepaid/vouchers" element={<PrepaidVouchers />} />
+    <Route path="prepaid/recharge" element={<RechargeAccount />} />
   </Routes>
 );
 
 const ClientRoutes = () => (
   <Routes>
     <Route path="" element={<ClientDashboard />} />
-    <Route path="invoices" element={<Invoices />} />
+    <Route path="invoices" element={<ClientInvoices />} />
+    <Route path="invoices/:id" element={<ClientInvoice />} />
     <Route path="history" element={<History />} />
     <Route path="profile" element={<ClientProfile />} />
   </Routes>

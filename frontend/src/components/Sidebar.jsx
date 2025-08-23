@@ -62,6 +62,11 @@ const menuItems = [
       { name: "Recharge Account", path: "/admin/prepaid/recharge" },
     ]
   },
+  {
+    name: "Invoices",
+    icon: <CreditCard size={18} />,
+    path: "/admin/invoices"
+  },
   { 
     name: "Tickets", 
     icon: <TicketIcon size={18} />, 

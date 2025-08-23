@@ -1,12 +1,29 @@
 from flask import Blueprint, jsonify
 from datetime import datetime, timedelta
-import random
+from models.usage import Bill
+from sqlalchemy import func
 
 dashboard_bp = Blueprint('dashboard', __name__)
 
 @dashboard_bp.route('/api/dashboard', methods=['GET'])
 def get_dashboard_data():
-    # Generate some realistic sample data
+    # Fetch monthly income history from Bill model
+    monthly_income_history = db.session.query(
+        func.strftime('%Y-%m', Bill.generated_date).label('month'),
+        func.sum(Bill.amount).label('total_income')
+    ).group_by(
+        func.strftime('%Y-%m', Bill.generated_date)
+    ).order_by(
+        func.strftime('%Y-%m', Bill.generated_date)
+    ).all()
+
+    # Format for frontend
+    formatted_monthly_income = [
+        {'month': row.month, 'income': row.total_income}
+        for row in monthly_income_history
+    ]
+
+    # Generate some realistic sample data for other parts of the dashboard
     current_time = datetime.now()
     hourly_data = []
     
@@ -28,7 +45,8 @@ def get_dashboard_data():
             'today': daily_total,
             'thisMonth': daily_total * 20,  # Simulate month total
             'entries': len([h for h in hourly_data if h['revenue'] > 0]),
-            'hourly': hourly_data
+            'hourly': hourly_data,
+            'monthlyIncomeHistory': formatted_monthly_income # Add historical data
         },
         'users': {
             'active': 41,

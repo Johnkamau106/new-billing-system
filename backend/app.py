@@ -20,6 +20,9 @@ def create_app():
     from routes.dashboard import dashboard_bp
     from routes.plans import plans_bp
     from routes.radius_sessions import radius_sessions_bp
+    from routes.invoices import invoices_bp
+    from routes.payments import payments_bp
+    from commands import cli_bp
 
     app.register_blueprint(clients_bp, url_prefix="/api/clients")
     app.register_blueprint(reports_bp, url_prefix="/api/reports")
@@ -27,6 +30,9 @@ def create_app():
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(plans_bp, url_prefix="/api/plans")
     app.register_blueprint(radius_sessions_bp, url_prefix="/api")
+    app.register_blueprint(invoices_bp, url_prefix="/api")
+    app.register_blueprint(payments_bp, url_prefix="/api")
+    app.register_blueprint(cli_bp)
 
     @app.route("/")
     def index():
