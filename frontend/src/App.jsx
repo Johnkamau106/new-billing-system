@@ -30,6 +30,7 @@ import StaticClients from "./pages/admin/StaticClients";
 import SessionHistory from "./pages/admin/SessionHistory";
 import PrepaidUsers from "./pages/admin/PrepaidUsers";
 import PrepaidVouchers from "./pages/admin/PrepaidVouchers";
+import Monitoring from "./pages/admin/Monitoring";
 import RechargeAccount from "./pages/admin/RechargeAccount";
 
 import Hotspots from "./pages/admin/Hotspots";
@@ -127,6 +128,8 @@ const AdminRoutes = () => (
     <Route path="prepaid/users" element={<PrepaidUsers />} />
     <Route path="prepaid/vouchers" element={<PrepaidVouchers />} />
     <Route path="prepaid/recharge" element={<RechargeAccount />} />
+    <Route path="settings" element={<Settings />} />
+    <Route path="monitoring" element={<Monitoring />} />
   </Routes>
 );
 

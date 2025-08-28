@@ -3,7 +3,7 @@ from datetime import datetime
 
 class BandwidthUsage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     download_bytes = db.Column(db.BigInteger, default=0)
     upload_bytes = db.Column(db.BigInteger, default=0)
@@ -21,7 +21,7 @@ class BandwidthUsage(db.Model):
 
 class Bill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200))
     generated_date = db.Column(db.DateTime, default=datetime.utcnow)

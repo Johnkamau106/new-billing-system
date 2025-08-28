@@ -13,6 +13,10 @@ class Invoice(db.Model):
     items = db.relationship('InvoiceItem', backref='invoice', lazy=True, cascade="all, delete-orphan")
     payments = db.relationship('Payment', backref='invoice', lazy=True)
 
+    @property
+    def total_amount(self):
+        return sum(item.amount for item in self.items)
+
     def __repr__(self):
         return f"<Invoice {self.id}>"
 

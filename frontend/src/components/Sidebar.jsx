@@ -12,7 +12,9 @@ import {
   UserPlus,
   CreditCard,
   TicketIcon,
-  ChevronDown
+  ChevronDown,
+  Settings,
+  Monitor
 } from "lucide-react";
 import "./Sidebar.css";
 
@@ -54,6 +56,11 @@ const menuItems = [
     ]
   },
   {
+    name: "Monitoring",
+    icon: <Monitor size={18} />,
+    path: "/admin/monitoring"
+  },
+  {
     name: "Prepaid",
     icon: <CreditCard size={18} />,
     submenu: [
@@ -72,6 +79,11 @@ const menuItems = [
     icon: <TicketIcon size={18} />, 
     path: "/admin/tickets",
     isNew: true
+  },
+  {
+    name: "Settings",
+    icon: <Settings size={18} />,
+    path: "/admin/settings"
   },
 ];
 

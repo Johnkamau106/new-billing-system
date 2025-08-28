@@ -2,9 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
+from flask_apscheduler import APScheduler
 
 db = SQLAlchemy()
 migrate = Migrate()
+scheduler = APScheduler()
 
 def create_app():
     app = Flask(__name__)
@@ -22,6 +24,7 @@ def create_app():
     from routes.radius_sessions import radius_sessions_bp
     from routes.invoices import invoices_bp
     from routes.payments import payments_bp
+    from routes.monitoring_routes import monitoring_bp
     from commands import cli_bp
 
     app.register_blueprint(clients_bp, url_prefix="/api/clients")
@@ -32,6 +35,7 @@ def create_app():
     app.register_blueprint(radius_sessions_bp, url_prefix="/api")
     app.register_blueprint(invoices_bp, url_prefix="/api")
     app.register_blueprint(payments_bp, url_prefix="/api")
+    app.register_blueprint(monitoring_bp, url_prefix="/api/monitoring")
     app.register_blueprint(cli_bp)
 
     @app.route("/")
@@ -40,7 +44,14 @@ def create_app():
 
     return app
 
-
 if __name__ == "__main__":
     app = create_app()
+    with app.app_context():
+        from services.monitoring import check_client_status
+        from services.billing import generate_invoices, check_overdue_invoices # Import the new function
+        scheduler.init_app(app)
+        scheduler.add_job(id='check_client_status_job', func=check_client_status, trigger='interval', seconds=60)
+        scheduler.add_job(id='generate_invoices_job', func=generate_invoices, trigger='interval', days=1) # Schedule invoice generation
+        scheduler.add_job(id='check_overdue_invoices_job', func=check_overdue_invoices, trigger='interval', hours=1) # Schedule overdue invoice check
+        scheduler.start()
     app.run(debug=True)
